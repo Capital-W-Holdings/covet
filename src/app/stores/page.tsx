@@ -1,6 +1,3 @@
-'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
 import { MapPin, Package, Star, ArrowRight, Shield, Users, TrendingUp, Check } from 'lucide-react';
 import { Container, Card, Button, Badge } from '@/components/ui';
@@ -100,8 +97,6 @@ const benefits = [
 ];
 
 export default function StoresPage() {
-  const [selectedStore, setSelectedStore] = useState<string | null>(null);
-
   return (
     <div className="min-h-screen bg-brand-offwhite">
       {/* Header */}
@@ -116,160 +111,6 @@ export default function StoresPage() {
       </div>
 
       <Container className="py-12">
-        {/* Interactive Map Section */}
-        <div className="mb-12">
-          <h2 className="font-heading text-2xl text-gray-900 mb-6">Find a Store Near You</h2>
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            {/* Map with markers - OpenStreetMap with calculated marker positions */}
-            {/* Map bounds: lng -75.5 to -69.5 (6° range), lat 39.5 to 43.5 (4° range) */}
-            <div className="relative h-[450px] bg-gray-100">
-              {/* OpenStreetMap base layer */}
-              <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-75.5%2C39.5%2C-69.5%2C43.5&layer=mapnik"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                title="Store locations map"
-              />
-
-              {/* Markers overlay - positions calculated from lat/lng */}
-              <div className="absolute inset-0 pointer-events-none">
-                {/* Boston Back Bay: 42.351, -71.076 → left: 73.7%, top: 28.7% */}
-                <button
-                  onClick={() => setSelectedStore(selectedStore === '1' ? null : '1')}
-                  className="absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 z-10"
-                  style={{ top: '28.7%', left: '73.7%' }}
-                >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '1' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-brand-navy'}`}>
-                    <MapPin className="w-3.5 h-3.5 text-white" />
-                  </div>
-                </button>
-
-                {/* Boston South End: 42.342, -71.070 → left: 73.8%, top: 29.0% */}
-                <button
-                  onClick={() => setSelectedStore(selectedStore === '2' ? null : '2')}
-                  className="absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 z-10"
-                  style={{ top: '29.0%', left: '73.8%' }}
-                >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '2' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-brand-navy'}`}>
-                    <MapPin className="w-3.5 h-3.5 text-white" />
-                  </div>
-                </button>
-
-                {/* Boston Beacon Hill: 42.358, -71.070 → left: 73.8%, top: 28.6% */}
-                <button
-                  onClick={() => setSelectedStore(selectedStore === '3' ? null : '3')}
-                  className="absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 z-10"
-                  style={{ top: '28.6%', left: '73.8%' }}
-                >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '3' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-brand-navy'}`}>
-                    <MapPin className="w-3.5 h-3.5 text-white" />
-                  </div>
-                </button>
-
-                {/* NYC: 40.758, -73.986 → left: 25.2%, top: 68.6% */}
-                <button
-                  onClick={() => setSelectedStore(selectedStore === '4' ? null : '4')}
-                  className="absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 z-10"
-                  style={{ top: '68.6%', left: '25.2%' }}
-                >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '4' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-gray-500'}`}>
-                    <MapPin className="w-3.5 h-3.5 text-white" />
-                  </div>
-                </button>
-
-                {/* Hamptons: 40.963, -72.185 → left: 55.3%, top: 63.4% */}
-                <button
-                  onClick={() => setSelectedStore(selectedStore === '5' ? null : '5')}
-                  className="absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 z-10"
-                  style={{ top: '63.4%', left: '55.3%' }}
-                >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '5' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-gray-500'}`}>
-                    <MapPin className="w-3.5 h-3.5 text-white" />
-                  </div>
-                </button>
-
-                {/* Newport: 41.490, -71.313 → left: 69.8%, top: 50.3% */}
-                <button
-                  onClick={() => setSelectedStore(selectedStore === '6' ? null : '6')}
-                  className="absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 z-10"
-                  style={{ top: '50.3%', left: '69.8%' }}
-                >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '6' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-gray-500'}`}>
-                    <MapPin className="w-3.5 h-3.5 text-white" />
-                  </div>
-                </button>
-
-                {/* Legend */}
-                <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-3 pointer-events-auto z-20">
-                  <p className="font-mono text-xs text-gray-600 mb-2 font-medium">Partner Locations</p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-brand-navy rounded-full border border-white shadow"></div>
-                      <span className="text-xs text-gray-700">Covet Flagship</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-gray-500 rounded-full border border-white shadow"></div>
-                      <span className="text-xs text-gray-700">Partner Store</span>
-                    </div>
-                  </div>
-                  <p className="font-mono text-xs text-gray-400 mt-3">Click markers for details</p>
-                </div>
-
-                {/* Selected store info overlay */}
-                {selectedStore && (
-                  <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-xl p-4 w-64 pointer-events-auto z-20">
-                    <button
-                      onClick={() => setSelectedStore(null)}
-                      className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                    {partnerStores.filter(s => s.id === selectedStore).map(store => (
-                      <div key={store.id}>
-                        <div className="flex items-center gap-2 mb-2">
-                          {store.isFlagship && (
-                            <span className="px-2 py-0.5 bg-brand-navy text-white text-xs rounded">Flagship</span>
-                          )}
-                        </div>
-                        <p className="font-heading text-lg text-gray-900">{store.name}</p>
-                        <p className="font-mono text-sm text-gray-500">{store.location.city}, {store.location.state}</p>
-                        <p className="font-mono text-sm text-green-600 mt-2">{store.productCount} items available</p>
-                        <Link href={`/stores/${store.slug}`} className="block mt-3">
-                          <Button size="sm" className="w-full">View Store</Button>
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Store quick list */}
-            <div className="p-4 border-t border-gray-200 overflow-x-auto">
-              <div className="flex gap-3">
-                {partnerStores.map((store) => (
-                  <button
-                    key={store.id}
-                    onClick={() => setSelectedStore(selectedStore === store.id ? null : store.id)}
-                    className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                      selectedStore === store.id
-                        ? 'bg-brand-navy text-white border-brand-navy'
-                        : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <MapPin className="w-4 h-4" />
-                    <span className="font-mono text-sm whitespace-nowrap">{store.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Store Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {partnerStores.map((store) => (
