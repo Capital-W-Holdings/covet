@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&family=Figtree:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-navy: #020912;
+  --color-offwhite: #fcfcfc;
+  --color-muted: #737373;
 }
 
 * {
@@ -20,11 +23,16 @@ body {
 }
 
 body {
-  font-family: var(--font-body);
-  color: #1a1a1a;
-  background: #ffffff;
+  font-family: 'Anonymous Pro', ui-monospace, monospace;
+  color: var(--color-navy);
+  background: var(--color-offwhite);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Figtree', system-ui, sans-serif;
+  font-weight: 500;
 }
 
 /* Custom scrollbar */
@@ -39,7 +47,6 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: #c1c1c1;
-  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -48,13 +55,13 @@ body {
 
 /* Focus styles */
 :focus-visible {
-  outline: 2px solid #B8860B;
+  outline: 2px solid var(--color-navy);
   outline-offset: 2px;
 }
 
 /* Selection */
 ::selection {
-  background: #B8860B;
+  background: var(--color-navy);
   color: white;
 }
 
@@ -78,74 +85,4 @@ body {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
-/* Animation utilities */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slide-up {
-  from {
-    transform: translateY(10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out;
-}
-
-/* Product image zoom */
-.product-image-zoom {
-  transition: transform 0.5s ease;
-}
-
-.product-image-zoom:hover {
-  transform: scale(1.05);
-}
-
-/* Trust badge gradient */
-.trust-badge-gold {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border: 1px solid #d97706;
-}
-
-/* Luxury button hover effect */
-.btn-luxury {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-luxury::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: left 0.5s;
-}
-
-.btn-luxury:hover::after {
-  left: 100%;
 }

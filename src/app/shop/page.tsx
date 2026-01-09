@@ -1,15 +1,12 @@
 import Link from 'next/link';
-import { staticProducts, formatPrice, conditionLabels, categoryLabels } from '@/lib/static-products';
+import { staticProducts, formatPrice, conditionLabels } from '@/lib/static-products';
 
-// Filter and sort options
+// Filter options
 const categories = [
-  { value: '', label: 'All Categories' },
+  { value: '', label: 'All' },
   { value: 'HANDBAGS', label: 'Handbags' },
   { value: 'WATCHES', label: 'Watches' },
   { value: 'JEWELRY', label: 'Jewelry' },
-  { value: 'ACCESSORIES', label: 'Accessories' },
-  { value: 'CLOTHING', label: 'Clothing' },
-  { value: 'SHOES', label: 'Shoes' },
 ];
 
 interface ShopPageProps {
@@ -19,7 +16,6 @@ interface ShopPageProps {
 export default async function ShopPage({ searchParams }: ShopPageProps) {
   const params = await searchParams;
   const categoryFilter = params.category || '';
-  const conditionFilter = params.condition || '';
   const sortBy = params.sort || 'price:desc';
 
   // Filter products
@@ -27,10 +23,6 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
   if (categoryFilter) {
     filteredProducts = filteredProducts.filter(p => p.category === categoryFilter);
-  }
-
-  if (conditionFilter) {
-    filteredProducts = filteredProducts.filter(p => p.condition === conditionFilter);
   }
 
   // Sort products
@@ -43,50 +35,41 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-brand-offwhite">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-3xl lg:text-4xl font-light text-gray-900 mb-2">Shop</h1>
-          <p className="text-gray-600">{filteredProducts.length} items</p>
+      <div className="border-b-2 border-brand-navy">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+          <h1 className="font-heading text-4xl lg:text-5xl text-brand-navy mb-2">Shop</h1>
+          <p className="font-mono text-sm text-brand-muted">{filteredProducts.length} items</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+        <div className="flex flex-col lg:flex-row gap-12">
           {/* Sidebar Filters */}
-          <aside className="lg:w-64 flex-shrink-0">
-            <div className="bg-white rounded-xl p-6 border border-gray-200 sticky top-24">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="font-medium text-gray-900">Filters</h2>
-                {(categoryFilter || conditionFilter) && (
-                  <Link href="/shop" className="text-sm text-amber-600 hover:underline">
-                    Clear all
-                  </Link>
-                )}
-              </div>
-
-              {/* Category */}
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Category</h3>
+          <aside className="lg:w-48 flex-shrink-0">
+            <div className="sticky top-28">
+              {/* Categories */}
+              <div className="mb-8">
+                <h3 className="font-mono text-xs uppercase tracking-wider text-brand-muted mb-4">Category</h3>
                 <div className="space-y-2">
                   {categories.map((cat) => {
                     const isActive = categoryFilter === cat.value || (!categoryFilter && !cat.value);
                     const href = cat.value
-                      ? `/shop?category=${cat.value}${conditionFilter ? `&condition=${conditionFilter}` : ''}${sortBy !== 'price:desc' ? `&sort=${sortBy}` : ''}`
-                      : `/shop${conditionFilter ? `?condition=${conditionFilter}` : ''}${sortBy !== 'price:desc' ? `${conditionFilter ? '&' : '?'}sort=${sortBy}` : ''}`;
+                      ? `/shop?category=${cat.value}${sortBy !== 'price:desc' ? `&sort=${sortBy}` : ''}`
+                      : `/shop${sortBy !== 'price:desc' ? `?sort=${sortBy}` : ''}`;
 
                     return (
                       <Link
                         key={cat.value}
                         href={href}
-                        className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                        className={`block font-mono text-sm transition-opacity ${
                           isActive
-                            ? 'bg-gray-900 text-white'
-                            : 'hover:bg-gray-100 text-gray-700'
+                            ? 'text-brand-navy'
+                            : 'text-brand-muted hover:text-brand-navy'
                         }`}
                       >
-                        {cat.label}
+                        {isActive && '→ '}{cat.label}
                       </Link>
                     );
                   })}
@@ -95,31 +78,40 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
               {/* Sort */}
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Sort By</h3>
+                <h3 className="font-mono text-xs uppercase tracking-wider text-brand-muted mb-4">Sort</h3>
                 <div className="space-y-2">
                   {[
-                    { value: 'price:desc', label: 'Price: High to Low' },
-                    { value: 'price:asc', label: 'Price: Low to High' },
+                    { value: 'price:desc', label: 'Price High → Low' },
+                    { value: 'price:asc', label: 'Price Low → High' },
                   ].map((option) => {
                     const isActive = sortBy === option.value;
-                    const href = `/shop?${categoryFilter ? `category=${categoryFilter}&` : ''}${conditionFilter ? `condition=${conditionFilter}&` : ''}sort=${option.value}`;
+                    const href = `/shop?${categoryFilter ? `category=${categoryFilter}&` : ''}sort=${option.value}`;
 
                     return (
                       <Link
                         key={option.value}
                         href={href}
-                        className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                        className={`block font-mono text-sm transition-opacity ${
                           isActive
-                            ? 'bg-gray-900 text-white'
-                            : 'hover:bg-gray-100 text-gray-700'
+                            ? 'text-brand-navy'
+                            : 'text-brand-muted hover:text-brand-navy'
                         }`}
                       >
-                        {option.label}
+                        {isActive && '→ '}{option.label}
                       </Link>
                     );
                   })}
                 </div>
               </div>
+
+              {(categoryFilter) && (
+                <Link
+                  href="/shop"
+                  className="block font-mono text-xs uppercase tracking-wider text-brand-muted mt-8 hover:text-brand-navy transition-colors"
+                >
+                  Clear Filters
+                </Link>
+              )}
             </div>
           </aside>
 
@@ -127,13 +119,13 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           <div className="flex-1">
             {filteredProducts.length === 0 ? (
               <div className="text-center py-16">
-                <p className="text-gray-500 text-lg">No products found</p>
-                <Link href="/shop" className="text-amber-600 hover:underline mt-2 inline-block">
+                <p className="font-mono text-brand-muted">No products found</p>
+                <Link href="/shop" className="font-mono text-sm text-brand-navy hover:opacity-60 mt-4 inline-block">
                   Clear filters
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {filteredProducts.map((product) => {
                   const discount = Math.round(
                     ((product.originalPriceCents - product.priceCents) / product.originalPriceCents) * 100
@@ -143,42 +135,37 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                     <Link
                       key={product.id}
                       href={`/products/${product.sku}`}
-                      className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow group"
+                      className="group"
                     >
-                      <div className="aspect-square bg-gray-100 relative overflow-hidden">
+                      <div className="aspect-square bg-brand-cream mb-4 overflow-hidden relative">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={product.image}
                           alt={product.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute top-3 left-3 flex flex-col gap-2">
-                          <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-medium">
-                            Certified
+                        {discount > 0 && (
+                          <span className="absolute top-3 left-3 bg-brand-navy text-white font-mono text-xs px-2 py-1">
+                            {discount}% OFF
                           </span>
-                          {discount > 0 && (
-                            <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">
-                              {discount}% Off
-                            </span>
-                          )}
-                        </div>
+                        )}
                       </div>
-                      <div className="p-4">
-                        <p className="text-xs text-amber-700 font-medium uppercase tracking-wide mb-1">
+                      <div>
+                        <p className="font-mono text-xs uppercase tracking-wider text-brand-muted mb-1">
                           {product.brand}
                         </p>
-                        <h3 className="font-medium text-gray-900 line-clamp-2 mb-2 group-hover:text-amber-600 transition-colors">
+                        <h3 className="font-heading text-brand-navy mb-1 group-hover:opacity-60 transition-opacity line-clamp-2">
                           {product.title}
                         </h3>
-                        <p className="text-xs text-gray-500 mb-3">
+                        <p className="font-mono text-xs text-brand-muted mb-2">
                           {conditionLabels[product.condition] || product.condition}
                         </p>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-lg font-semibold text-gray-900">
+                          <span className="font-mono text-sm text-brand-navy">
                             {formatPrice(product.priceCents)}
                           </span>
                           {product.originalPriceCents > product.priceCents && (
-                            <span className="text-sm text-gray-400 line-through">
+                            <span className="font-mono text-xs text-brand-muted line-through">
                               {formatPrice(product.originalPriceCents)}
                             </span>
                           )}
