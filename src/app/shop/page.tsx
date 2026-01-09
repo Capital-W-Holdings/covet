@@ -106,7 +106,7 @@ function ShopPageContent() {
 
   const handleAddToCart = () => {
     if (!user) {
-      router.push('/login?redirect=/shop');
+      router.push('/register?redirect=/shop');
       return;
     }
     // TODO: Add to cart logic

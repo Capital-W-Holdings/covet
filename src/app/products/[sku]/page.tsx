@@ -108,6 +108,12 @@ export default function ProductDetailPage() {
   const handleAddToCart = async () => {
     if (!isAvailable || isInCart) return;
 
+    // Redirect to register page if not logged in
+    if (!user) {
+      router.push('/register?redirect=' + encodeURIComponent(`/products/${sku}`));
+      return;
+    }
+
     setIsAddingToCart(true);
     addToCart(product);
     setIsAddingToCart(false);

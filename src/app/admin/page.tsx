@@ -44,6 +44,7 @@ export default function AdminDashboard() {
     }
   }, [user]);
 
+  // Show loading while auth is being checked
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -52,9 +53,33 @@ export default function AdminDashboard() {
     );
   }
 
-  if (!user || (user.role !== 'COVET_ADMIN' && user.role !== 'SUPER_ADMIN')) {
+  // Not logged in - redirect to login
+  if (!user) {
     router.push('/login?redirect=/admin');
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  // Logged in but not admin - show access denied
+  if (user.role !== 'COVET_ADMIN' && user.role !== 'SUPER_ADMIN') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="p-8 max-w-md text-center">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h1 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h1>
+          <p className="text-gray-600 mb-4">
+            You don&apos;t have permission to access the admin dashboard.
+            Your role: {user.role}
+          </p>
+          <Link href="/">
+            <Button>Go Home</Button>
+          </Link>
+        </Card>
+      </div>
+    );
   }
 
   const statCards = [
