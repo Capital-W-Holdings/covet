@@ -1,0 +1,514 @@
+// Covet Platform Database Schema
+// Prisma ORM with PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum UserRole {
+  BUYER
+  STORE_ADMIN
+  COVET_ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+enum StoreType {
+  COVET_FLAGSHIP
+  PARTNER
+}
+
+enum StoreTier {
+  FLAGSHIP
+  PREMIUM
+  STANDARD
+}
+
+enum StoreStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+enum ProductCategory {
+  HANDBAGS
+  WATCHES
+  JEWELRY
+  ACCESSORIES
+  CLOTHING
+  SHOES
+}
+
+enum ProductCondition {
+  NEW_WITH_TAGS
+  NEW_WITHOUT_TAGS
+  EXCELLENT
+  VERY_GOOD
+  GOOD
+  FAIR
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  SOLD
+  RESERVED
+  ARCHIVED
+}
+
+enum AuthenticationStatus {
+  PENDING
+  COVET_CERTIFIED
+  STORE_CERTIFIED
+  THIRD_PARTY
+  FAILED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  REFUNDED
+}
+
+enum StoreApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  NEEDS_INFO
+}
+
+enum DisputeStatus {
+  OPEN
+  SELLER_RESPONSE
+  UNDER_REVIEW
+  ESCALATED
+  RESOLVED
+  CLOSED
+}
+
+enum DisputeReason {
+  NOT_AS_DESCRIBED
+  AUTHENTICATION_CONCERN
+  DAMAGED_IN_SHIPPING
+  NOT_RECEIVED
+  WRONG_ITEM
+  OTHER
+}
+
+enum DisputeResolution {
+  FULL_REFUND
+  PARTIAL_REFUND
+  RETURN_AND_REFUND
+  REPLACEMENT
+  NO_ACTION
+  BUYER_WITHDREW
+}
+
+// =============================================================================
+// MODELS
+// =============================================================================
+
+model User {
+  id               String     @id @default(uuid())
+  email            String     @unique
+  passwordHash     String
+  role             UserRole   @default(BUYER)
+  status           UserStatus @default(ACTIVE)
+  
+  // Profile (embedded as JSON for flexibility)
+  profileName      String?
+  profileAvatarUrl String?
+  profilePhone     String?
+  
+  // Stripe
+  stripeCustomerId String?
+  
+  // Timestamps
+  lastLogin        DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  
+  // Relations
+  stores           Store[]
+  orders           Order[]    @relation("BuyerOrders")
+  reviews          Review[]
+  disputesBuyer    Dispute[]  @relation("BuyerDisputes")
+  disputesSeller   Dispute[]  @relation("SellerDisputes")
+  applications     StoreApplication[]
+  addresses        Address[]
+  
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  userId     String?
+  name       String
+  street1    String
+  street2    String?
+  city       String
+  state      String
+  postalCode String
+  country    String   @default("US")
+  phone      String?
+  isDefault  Boolean  @default(false)
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  // Relations
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@map("addresses")
+}
+
+model Store {
+  id              String      @id @default(uuid())
+  slug            String      @unique
+  name            String
+  ownerId         String
+  type            StoreType   @default(PARTNER)
+  tier            StoreTier   @default(STANDARD)
+  status          StoreStatus @default(PENDING)
+  
+  // Branding (JSON)
+  brandingLogoUrl    String?
+  brandingBannerUrl  String?
+  brandingAccentColor String?
+  brandingDescription String?
+  brandingTagline    String?
+  
+  // Contact
+  contactEmail    String?
+  contactPhone    String?
+  contactStreet1  String?
+  contactStreet2  String?
+  contactCity     String?
+  contactState    String?
+  contactPostalCode String?
+  contactCountry  String?
+  
+  // Settings (JSON)
+  acceptsOffers       Boolean @default(false)
+  autoPublish         Boolean @default(false)
+  defaultShippingDays Int     @default(5)
+  
+  // Business
+  stripeConnectId String?
+  trustScore      Int       @default(50)
+  takeRate        Float     @default(0.10) // 10% default
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // Relations
+  owner           User      @relation(fields: [ownerId], references: [id])
+  products        Product[]
+  orders          Order[]
+  reviews         Review[]
+  disputes        Dispute[]
+  payouts         StorePayout[]
+  
+  @@index([slug])
+  @@index([ownerId])
+  @@index([status])
+  @@map("stores")
+}
+
+model Product {
+  id                   String               @id @default(uuid())
+  storeId              String
+  sku                  String               @unique
+  title                String
+  description          String
+  brand                String
+  category             ProductCategory
+  subcategory          String?
+  condition            ProductCondition
+  priceCents           Int
+  originalPriceCents   Int?
+  
+  // Images (JSON array)
+  images               Json                 @default("[]")
+  
+  // Authentication
+  authenticationStatus AuthenticationStatus @default(PENDING)
+  authenticationId     String?
+  
+  // Status
+  status               ProductStatus        @default(DRAFT)
+  
+  // Metadata (JSON)
+  metadata             Json                 @default("{}")
+  
+  // Stats
+  viewCount            Int                  @default(0)
+  
+  // Reservation
+  reservedBy           String?
+  reservedUntil        DateTime?
+  
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  
+  // Relations
+  store                Store                @relation(fields: [storeId], references: [id])
+  authentication       Authentication?
+  orderItems           Order[]
+  reviews              Review[]
+  
+  @@index([storeId])
+  @@index([sku])
+  @@index([status])
+  @@index([category])
+  @@index([brand])
+  @@index([priceCents])
+  @@index([createdAt])
+  @@map("products")
+}
+
+model Authentication {
+  id          String   @id @default(uuid())
+  productId   String   @unique
+  method      String   // 'COVET_EXPERT', 'THIRD_PARTY', 'STORE_SELF'
+  certifiedBy String
+  notes       String?
+  evidenceUrls Json    @default("[]")
+  confidence  Int      @default(0) // 0-100
+  
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@map("authentications")
+}
+
+model Order {
+  id              String        @id @default(uuid())
+  orderNumber     String        @unique
+  buyerId         String
+  storeId         String
+  productId       String
+  
+  // Order item snapshot
+  productTitle    String
+  productSku      String
+  productPriceCents Int
+  productImageUrl String?
+  
+  // Amounts
+  subtotalCents   Int
+  shippingCents   Int           @default(0)
+  taxCents        Int           @default(0)
+  totalCents      Int
+  platformFeeCents Int          @default(0)
+  
+  // Status
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  paymentIntentId String?
+  
+  // Shipping
+  shippingName      String
+  shippingStreet1   String
+  shippingStreet2   String?
+  shippingCity      String
+  shippingState     String
+  shippingPostalCode String
+  shippingCountry   String      @default("US")
+  shippingPhone     String?
+  
+  // Tracking
+  carrier         String?
+  trackingNumber  String?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  
+  // Dispute
+  disputeDeadline DateTime?
+  
+  notes           String?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  // Relations
+  buyer           User          @relation("BuyerOrders", fields: [buyerId], references: [id])
+  store           Store         @relation(fields: [storeId], references: [id])
+  product         Product       @relation(fields: [productId], references: [id])
+  review          Review?
+  dispute         Dispute?
+  
+  @@index([orderNumber])
+  @@index([buyerId])
+  @@index([storeId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  orderId   String   @unique
+  productId String
+  storeId   String
+  buyerId   String
+  
+  rating    Int      // 1-5
+  title     String?
+  comment   String?
+  images    Json     @default("[]")
+  
+  // Moderation
+  isVerified Boolean @default(true)
+  isPublic   Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+  store     Store    @relation(fields: [storeId], references: [id])
+  buyer     User     @relation(fields: [buyerId], references: [id])
+  
+  @@index([storeId])
+  @@index([productId])
+  @@index([rating])
+  @@map("reviews")
+}
+
+model Dispute {
+  id          String            @id @default(uuid())
+  orderId     String            @unique
+  buyerId     String
+  sellerId    String
+  storeId     String
+  
+  reason      DisputeReason
+  description String
+  evidence    Json              @default("[]")
+  
+  status      DisputeStatus     @default(OPEN)
+  
+  // Resolution
+  resolution      DisputeResolution?
+  resolvedBy      String?
+  resolutionNotes String?
+  resolvedAt      DateTime?
+  
+  // Messages (JSON array)
+  messages    Json              @default("[]")
+  
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  
+  // Relations
+  order       Order             @relation(fields: [orderId], references: [id])
+  buyer       User              @relation("BuyerDisputes", fields: [buyerId], references: [id])
+  seller      User              @relation("SellerDisputes", fields: [sellerId], references: [id])
+  store       Store             @relation(fields: [storeId], references: [id])
+  
+  @@index([status])
+  @@index([storeId])
+  @@map("disputes")
+}
+
+model StoreApplication {
+  id                 String                 @id @default(uuid())
+  userId             String
+  
+  // Business Info
+  businessName       String
+  legalName          String
+  businessType       String                 // 'SOLE_PROPRIETOR', 'LLC', etc.
+  taxId              String?
+  website            String?
+  instagram          String?
+  description        String
+  
+  // Operations
+  yearsInBusiness    Int
+  estimatedInventory Int
+  estimatedMonthlyGMV Int
+  categories         Json                   @default("[]")
+  
+  // Location
+  hasPhysicalLocation Boolean               @default(false)
+  addressStreet1     String?
+  addressStreet2     String?
+  addressCity        String?
+  addressState       String?
+  addressPostalCode  String?
+  addressCountry     String?
+  
+  // Contact
+  contactEmail       String
+  contactPhone       String
+  
+  // Review
+  status             StoreApplicationStatus @default(PENDING)
+  reviewedBy         String?
+  reviewedAt         DateTime?
+  reviewNotes        String?
+  
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  
+  // Relations
+  user               User                   @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([status])
+  @@map("store_applications")
+}
+
+model StorePayout {
+  id            String   @id @default(uuid())
+  storeId       String
+  amountCents   Int
+  status        String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  stripePayoutId String?
+  
+  createdAt     DateTime @default(now())
+  completedAt   DateTime?
+  
+  // Relations
+  store         Store    @relation(fields: [storeId], references: [id])
+  
+  @@index([storeId])
+  @@index([status])
+  @@map("store_payouts")
+}
