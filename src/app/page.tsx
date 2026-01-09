@@ -1,25 +1,27 @@
 import Link from 'next/link';
 
-// Static product data with color placeholders instead of images
+// Static product data - hardcoded for consistency
 const products = [
-  { id: '1', sku: 'hermes-birkin-25-noir', title: 'Hermès Birkin 25', brand: 'Hermès', price: '$18,950', color: '#8B4513' },
-  { id: '2', sku: 'chanel-classic-flap', title: 'Chanel Classic Flap', brand: 'Chanel', price: '$7,850', color: '#1a1a1a' },
-  { id: '3', sku: 'rolex-datejust-36', title: 'Rolex Datejust 36', brand: 'Rolex', price: '$8,950', color: '#C0C0C0' },
-  { id: '4', sku: 'cartier-love-bracelet', title: 'Cartier Love Bracelet', brand: 'Cartier', price: '$5,950', color: '#FFD700' },
-  { id: '5', sku: 'louis-vuitton-neverfull', title: 'LV Neverfull MM', brand: 'Louis Vuitton', price: '$1,450', color: '#8B4513' },
-  { id: '6', sku: 'gucci-marmont', title: 'Gucci GG Marmont', brand: 'Gucci', price: '$1,650', color: '#1a1a1a' },
-  { id: '7', sku: 'omega-speedmaster', title: 'Omega Speedmaster', brand: 'Omega', price: '$4,950', color: '#2F4F4F' },
-  { id: '8', sku: 'van-cleef-alhambra', title: 'VCA Alhambra Pendant', brand: 'Van Cleef & Arpels', price: '$3,250', color: '#FFD700' },
+  { id: '1', sku: 'hermes-birkin-25-noir', title: 'Hermès Birkin 25', brand: 'Hermès', price: '$18,950', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=400&fit=crop' },
+  { id: '2', sku: 'chanel-classic-flap-medium', title: 'Chanel Classic Flap', brand: 'Chanel', price: '$7,850', image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop' },
+  { id: '3', sku: 'rolex-datejust-36', title: 'Rolex Datejust 36', brand: 'Rolex', price: '$8,950', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&h=400&fit=crop' },
+  { id: '4', sku: 'cartier-love-bracelet', title: 'Cartier Love Bracelet', brand: 'Cartier', price: '$5,950', image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop' },
+  { id: '5', sku: 'louis-vuitton-neverfull-mm', title: 'LV Neverfull MM', brand: 'Louis Vuitton', price: '$1,450', image: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=400&h=400&fit=crop' },
+  { id: '6', sku: 'gucci-marmont-small', title: 'Gucci GG Marmont', brand: 'Gucci', price: '$1,650', image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=400&h=400&fit=crop' },
+  { id: '7', sku: 'omega-speedmaster-moonwatch', title: 'Omega Speedmaster', brand: 'Omega', price: '$4,950', image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop' },
+  { id: '8', sku: 'van-cleef-alhambra-vintage', title: 'VCA Alhambra Pendant', brand: 'Van Cleef & Arpels', price: '$3,250', image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop' },
 ];
 
 export default function HomePage() {
   return (
     <div>
-      {/* Hero - solid gradient, no image */}
+      {/* Hero */}
       <section
         className="relative min-h-[500px] flex items-center"
         style={{
-          background: 'linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%)'
+          backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.7), transparent), url(https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -45,7 +47,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-3">
-              <span className="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold">C</span>
+              <span className="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-sm">C</span>
               <div>
                 <p className="font-medium text-gray-900">Covet Certified</p>
                 <p className="text-sm text-gray-600">Expert authentication</p>
@@ -59,7 +61,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex items-center justify-center md:justify-start gap-3">
-              <span className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">S</span>
+              <span className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">S</span>
               <div>
                 <p className="font-medium text-gray-900">Free Shipping</p>
                 <p className="text-sm text-gray-600">On all orders</p>
@@ -69,7 +71,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Products - color placeholders instead of images */}
+      {/* Featured Products */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-10">
@@ -89,14 +91,13 @@ export default function HomePage() {
                 href={`/products/${product.sku}`}
                 className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
               >
-                {/* Color placeholder instead of image */}
-                <div
-                  className="aspect-square relative flex items-center justify-center"
-                  style={{ backgroundColor: product.color }}
-                >
-                  <span className="text-white text-4xl font-light opacity-50">
-                    {product.brand.charAt(0)}
-                  </span>
+                <div className="aspect-square bg-gray-100 relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-full object-cover"
+                  />
                   <span className="absolute top-2 left-2 bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-medium">
                     Certified
                   </span>
