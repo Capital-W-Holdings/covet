@@ -414,3 +414,6 @@ export * from './review';
 
 // Re-export price alert types
 export * from './priceAlert';
+
+// Re-export support types
+export * from './support';

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Package, ShoppingCart, DollarSign, TrendingUp, Plus, Store, Users, AlertCircle } from 'lucide-react';
+import { Package, ShoppingCart, DollarSign, TrendingUp, Plus, Store, AlertCircle, MessageCircle, BookOpen } from 'lucide-react';
 import { Container, Card, Button, Badge, Spinner } from '@/components/ui';
 import { useAuth } from '@/hooks';
 import { formatPrice } from '@/lib/utils';
@@ -191,6 +191,18 @@ export default function AdminDashboard() {
                 <Button variant="outline" className="w-full justify-start">
                   <Plus className="w-4 h-4 mr-3" />
                   Add New Product
+                </Button>
+              </Link>
+              <Link href="/admin/support" className="block">
+                <Button variant="outline" className="w-full justify-start">
+                  <MessageCircle className="w-4 h-4 mr-3" />
+                  Support Tickets
+                </Button>
+              </Link>
+              <Link href="/admin/handbook" className="block">
+                <Button variant="outline" className="w-full justify-start">
+                  <BookOpen className="w-4 h-4 mr-3" />
+                  Owner Handbook
                 </Button>
               </Link>
             </div>

@@ -15,6 +15,9 @@ import type {
   Review,
   Dispute,
 } from '@/types/review';
+import type {
+  SupportTicket,
+} from '@/types/support';
 import {
   UserRole,
   UserStatus,
@@ -104,6 +107,7 @@ class InMemoryDatabase {
   storePayouts = new Table<StorePayout>();
   reviews = new Table<Review>();
   disputes = new Table<Dispute>();
+  supportTickets = new Table<SupportTicket>();
 
   private seeded = false;
 
@@ -117,6 +121,7 @@ class InMemoryDatabase {
     this.storePayouts.clear();
     this.reviews.clear();
     this.disputes.clear();
+    this.supportTickets.clear();
     this.seeded = false;
   }
 

@@ -6,3 +6,4 @@ export { storeApplicationRepository, storeStatsRepository, storePayoutRepository
 export { reviewRepository } from './review';
 export { disputeRepository } from './dispute';
 export { trustScoreRepository } from './trustScore';
+export { supportRepository } from './support';
