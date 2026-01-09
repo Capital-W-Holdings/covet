@@ -89,6 +89,7 @@ export default function AdminDashboard() {
       icon: DollarSign,
       color: 'text-green-600',
       bgColor: 'bg-green-100',
+      href: '/admin/analytics/revenue',
     },
     {
       title: 'Total Orders',
@@ -96,6 +97,7 @@ export default function AdminDashboard() {
       icon: ShoppingCart,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
+      href: '/admin/analytics/orders',
     },
     {
       title: 'Pending Orders',
@@ -103,6 +105,7 @@ export default function AdminDashboard() {
       icon: TrendingUp,
       color: 'text-amber-600',
       bgColor: 'bg-amber-100',
+      href: '/admin/analytics/orders?filter=pending',
     },
     {
       title: 'Total Products',
@@ -110,6 +113,7 @@ export default function AdminDashboard() {
       icon: Package,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
+      href: '/admin/analytics/products',
     },
   ];
 
@@ -132,19 +136,22 @@ export default function AdminDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statCards.map((stat) => (
-            <Card key={stat.title} className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">{stat.title}</p>
-                  <p className="text-2xl font-semibold text-gray-900 mt-1">
-                    {loading ? <Spinner size="sm" /> : stat.value}
-                  </p>
+            <Link key={stat.title} href={stat.href}>
+              <Card hover className="p-6 cursor-pointer transition-all hover:shadow-md">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500">{stat.title}</p>
+                    <p className="text-2xl font-semibold text-gray-900 mt-1">
+                      {loading ? <Spinner size="sm" /> : stat.value}
+                    </p>
+                  </div>
+                  <div className={`p-3 rounded-lg ${stat.bgColor}`}>
+                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                  </div>
                 </div>
-                <div className={`p-3 rounded-lg ${stat.bgColor}`}>
-                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                </div>
-              </div>
-            </Card>
+                <p className="text-xs text-gray-400 mt-2">Click for details →</p>
+              </Card>
+            </Link>
           ))}
         </div>
 
