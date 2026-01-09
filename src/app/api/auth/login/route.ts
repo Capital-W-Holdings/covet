@@ -106,6 +106,16 @@ export async function POST(request: NextRequest) {
       message: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     });
-    return handleApiError(error);
+    // Temporarily return detailed error for debugging
+    return NextResponse.json({
+      success: false,
+      error: {
+        type: 'InternalError',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        code: 'INTERNAL_ERROR',
+        debugName: error instanceof Error ? error.name : 'Unknown',
+        debugStack: error instanceof Error ? error.stack?.split('\n').slice(0, 5) : undefined,
+      }
+    }, { status: 500 });
   }
 }
