@@ -1,80 +1,85 @@
 import Link from 'next/link';
-import { MapPin, Package, Star, ArrowRight, Shield, Users, TrendingUp, Check } from 'lucide-react';
+import { MapPin, Package, Star, ArrowRight, Shield, Users, TrendingUp, Check, Phone, Clock, ExternalLink } from 'lucide-react';
 import { Container, Card, Button, Badge } from '@/components/ui';
 
-// Partner stores with locations
-const partnerStores = [
+// Covet's actual store locations
+const covetStores = [
   {
-    id: '1',
-    name: 'Covet Back Bay',
-    slug: 'covet-back-bay',
-    description: 'Our flagship location in the heart of Boston\'s premier shopping district.',
+    id: 'beacon-hill',
+    name: 'Covet Beacon Hill',
+    slug: 'covet-beacon-hill',
+    description: 'Our original location on historic Charles Street. Beacon Hill charm meets curated luxury.',
     logo: 'https://i.ibb.co/xSWg62rN/Covet-Logotype.webp',
-    coverImage: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800',
-    location: { city: 'Boston', state: 'MA', lat: 42.3510, lng: -71.0760 },
+    coverImage: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=800',
+    address: '109 Charles Street',
+    city: 'Boston',
+    state: 'MA',
+    zip: '02114',
+    phone: '617.530.1111',
+    hours: 'Mon-Sat 10am-7pm, Sun 10am-6pm',
+    location: { lat: 42.3584, lng: -71.0711 },
     productCount: 245,
     trustScore: 100,
     isFlagship: true,
+    externalUrl: 'https://covetboston.com/pages/stores',
   },
   {
-    id: '2',
+    id: 'back-bay',
+    name: 'Covet Back Bay',
+    slug: 'covet-back-bay',
+    description: 'Our flagship location on iconic Newbury Street in Boston\'s premier shopping district.',
+    logo: 'https://i.ibb.co/xSWg62rN/Covet-Logotype.webp',
+    coverImage: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800',
+    address: '176 Newbury Street',
+    city: 'Boston',
+    state: 'MA',
+    zip: '02116',
+    phone: '617.356.0070',
+    hours: 'Daily 10am-7pm',
+    location: { lat: 42.3510, lng: -71.0760 },
+    productCount: 312,
+    trustScore: 100,
+    isFlagship: true,
+    externalUrl: 'https://covetboston.com/pages/stores',
+  },
+  {
+    id: 'south-end',
     name: 'Covet South End',
     slug: 'covet-south-end',
-    description: 'Curated vintage and contemporary designer pieces in the trendy South End.',
+    description: 'Our newest location in the heart of the South End. Contemporary luxury in a trendy neighborhood.',
     logo: 'https://i.ibb.co/xSWg62rN/Covet-Logotype.webp',
     coverImage: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800',
-    location: { city: 'Boston', state: 'MA', lat: 42.3420, lng: -71.0700 },
+    address: '575 Tremont Street',
+    city: 'Boston',
+    state: 'MA',
+    zip: '02118',
+    phone: '617.356.0040',
+    hours: 'Daily 10am-6pm',
+    location: { lat: 42.3420, lng: -71.0700 },
     productCount: 189,
     trustScore: 100,
     isFlagship: true,
+    isNew: true,
+    externalUrl: 'https://covetboston.com/pages/stores',
   },
   {
-    id: '3',
-    name: 'Covet Beacon Hill',
-    slug: 'covet-beacon-hill',
-    description: 'Historic charm meets luxury consignment on Charles Street.',
+    id: 'southie',
+    name: 'Covet Southie',
+    slug: 'covet-southie',
+    description: 'South Boston\'s destination for authenticated luxury consignment. Local vibes, world-class finds.',
     logo: 'https://i.ibb.co/xSWg62rN/Covet-Logotype.webp',
-    coverImage: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=800',
-    location: { city: 'Boston', state: 'MA', lat: 42.3580, lng: -71.0700 },
+    coverImage: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800',
+    address: '391 W Broadway',
+    city: 'Boston',
+    state: 'MA',
+    zip: '02127',
+    phone: '617.268.1100',
+    hours: 'Mon-Sat 10am-7pm, Sun 10am-6pm',
+    location: { lat: 42.3380, lng: -71.0460 },
     productCount: 156,
     trustScore: 100,
     isFlagship: true,
-  },
-  {
-    id: '4',
-    name: 'Luxury Finds NYC',
-    slug: 'luxury-finds-nyc',
-    description: 'Manhattan\'s trusted source for pre-loved designer fashion.',
-    logo: 'https://i.ibb.co/xSWg62rN/Covet-Logotype.webp',
-    coverImage: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800',
-    location: { city: 'New York', state: 'NY', lat: 40.7580, lng: -73.9855 },
-    productCount: 312,
-    trustScore: 98,
-    isFlagship: false,
-  },
-  {
-    id: '5',
-    name: 'Hamptons Resale',
-    slug: 'hamptons-resale',
-    description: 'Summer estate consignments from the Hamptons elite.',
-    logo: 'https://i.ibb.co/xSWg62rN/Covet-Logotype.webp',
-    coverImage: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800',
-    location: { city: 'East Hampton', state: 'NY', lat: 40.9634, lng: -72.1848 },
-    productCount: 178,
-    trustScore: 97,
-    isFlagship: false,
-  },
-  {
-    id: '6',
-    name: 'Newport Consignment',
-    slug: 'newport-consignment',
-    description: 'Classic elegance from Rhode Island\'s historic mansions.',
-    logo: 'https://i.ibb.co/xSWg62rN/Covet-Logotype.webp',
-    coverImage: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800',
-    location: { city: 'Newport', state: 'RI', lat: 41.4901, lng: -71.3128 },
-    productCount: 134,
-    trustScore: 96,
-    isFlagship: false,
+    externalUrl: 'https://covetboston.com/pages/stores',
   },
 ];
 
@@ -102,22 +107,37 @@ export default function StoresPage() {
       {/* Header */}
       <div className="bg-brand-navy text-white py-16">
         <Container>
-          <h1 className="font-heading text-3xl lg:text-4xl mb-4">Partner Stores</h1>
+          <h1 className="font-heading text-3xl lg:text-4xl mb-4">Our Stores</h1>
           <p className="text-lg text-gray-200 max-w-2xl font-mono">
-            Discover authenticated luxury from our network of trusted consignment partners.
-            Each store is vetted and verified by the Covet team.
+            Visit any of our four Boston locations for authenticated luxury consignment.
+            Every item is vetted by our expert team.
           </p>
+          <a
+            href="https://covetboston.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 mt-4 text-sm text-gray-300 hover:text-white transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Visit covetboston.com
+          </a>
         </Container>
       </div>
 
       <Container className="py-12">
         {/* Store Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {partnerStores.map((store) => (
-            <Link key={store.id} href={`/stores/${store.slug}`}>
+        <div className="grid md:grid-cols-2 gap-6">
+          {covetStores.map((store) => (
+            <a
+              key={store.id}
+              href={store.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
               <Card hover className="h-full">
                 {/* Cover Image */}
-                <div className="relative h-40 bg-gradient-to-br from-gray-100 to-gray-200">
+                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={store.coverImage}
@@ -125,19 +145,20 @@ export default function StoresPage() {
                     className="w-full h-full object-cover"
                   />
 
-                  {/* Type Badge */}
-                  {store.isFlagship && (
-                    <Badge variant="gold" className="absolute top-3 left-3">
-                      Covet Flagship
-                    </Badge>
-                  )}
+                  {/* Badges */}
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    <Badge variant="gold">Covet Location</Badge>
+                    {store.isNew && (
+                      <Badge variant="success">Now Open!</Badge>
+                    )}
+                  </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-5">
+                <div className="p-6">
                   <div className="flex items-start gap-4">
                     {/* Logo */}
-                    <div className="relative w-16 h-16 -mt-10 bg-white rounded-lg border-2 border-white shadow-md overflow-hidden flex-shrink-0 flex items-center justify-center p-2">
+                    <div className="relative w-16 h-16 -mt-12 bg-white rounded-lg border-2 border-white shadow-md overflow-hidden flex-shrink-0 flex items-center justify-center p-2">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={store.logo}
@@ -147,7 +168,7 @@ export default function StoresPage() {
                     </div>
 
                     <div className="flex-1 min-w-0 pt-1">
-                      <h3 className="font-medium text-gray-900 truncate">{store.name}</h3>
+                      <h3 className="font-medium text-gray-900 text-lg">{store.name}</h3>
 
                       {/* Trust Score */}
                       <div className="flex items-center gap-1 text-sm text-gray-600">
@@ -158,25 +179,39 @@ export default function StoresPage() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm text-gray-600 mt-4 line-clamp-2">
+                  <p className="text-sm text-gray-600 mt-4">
                     {store.description}
                   </p>
 
-                  {/* Stats */}
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-1 text-sm text-gray-600">
-                      <Package className="w-4 h-4" />
-                      <span>{store.productCount} items</span>
+                  {/* Store Details */}
+                  <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
+                    <div className="flex items-start gap-2 text-sm text-gray-700">
+                      <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <span>{store.address}, {store.city}, {store.state} {store.zip}</span>
                     </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <span>{store.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <span>{store.hours}</span>
+                    </div>
+                  </div>
 
-                    <div className="flex items-center gap-1 text-sm text-gray-600">
-                      <MapPin className="w-4 h-4" />
-                      <span>{store.location.city}, {store.location.state}</span>
+                  {/* View Link */}
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-sm text-gray-500">
+                      <Package className="w-4 h-4" />
+                      <span>{store.productCount}+ items in store</span>
                     </div>
+                    <span className="text-sm text-brand-navy font-medium flex items-center gap-1">
+                      Visit Store <ExternalLink className="w-3 h-3" />
+                    </span>
                   </div>
                 </div>
               </Card>
-            </Link>
+            </a>
           ))}
         </div>
 
