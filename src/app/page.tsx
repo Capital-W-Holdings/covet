@@ -1,335 +1,133 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Shield, Award, Truck } from 'lucide-react';
-import { Container, Button } from '@/components/ui';
-import { StaticProductCard } from '@/components/product/StaticProductCard';
 
-// Static product data - no database needed
-const featuredProducts = [
-  {
-    id: 'prod_1',
-    sku: 'hermes-birkin-25-noir',
-    title: 'Hermès Birkin 25 Togo Noir',
-    brand: 'Hermès',
-    priceCents: 1895000,
-    originalPriceCents: 2200000,
-    condition: 'EXCELLENT',
-    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800',
-  },
-  {
-    id: 'prod_2',
-    sku: 'chanel-classic-flap-medium',
-    title: 'Chanel Classic Flap Medium Caviar',
-    brand: 'Chanel',
-    priceCents: 785000,
-    originalPriceCents: 1050000,
-    condition: 'VERY_GOOD',
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800',
-  },
-  {
-    id: 'prod_3',
-    sku: 'rolex-datejust-36',
-    title: 'Rolex Datejust 36 Two-Tone',
-    brand: 'Rolex',
-    priceCents: 895000,
-    originalPriceCents: 1200000,
-    condition: 'EXCELLENT',
-    image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800',
-  },
-  {
-    id: 'prod_4',
-    sku: 'cartier-love-bracelet',
-    title: 'Cartier Love Bracelet Yellow Gold',
-    brand: 'Cartier',
-    priceCents: 595000,
-    originalPriceCents: 750000,
-    condition: 'EXCELLENT',
-    image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800',
-  },
-  {
-    id: 'prod_5',
-    sku: 'louis-vuitton-neverfull-mm',
-    title: 'Louis Vuitton Neverfull MM Damier Ebene',
-    brand: 'Louis Vuitton',
-    priceCents: 145000,
-    originalPriceCents: 200000,
-    condition: 'VERY_GOOD',
-    image: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800',
-  },
-  {
-    id: 'prod_6',
-    sku: 'gucci-marmont-small',
-    title: 'Gucci GG Marmont Small Matelassé',
-    brand: 'Gucci',
-    priceCents: 165000,
-    originalPriceCents: 250000,
-    condition: 'EXCELLENT',
-    image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800',
-  },
-  {
-    id: 'prod_7',
-    sku: 'omega-speedmaster-moonwatch',
-    title: 'Omega Speedmaster Professional Moonwatch',
-    brand: 'Omega',
-    priceCents: 495000,
-    originalPriceCents: 650000,
-    condition: 'EXCELLENT',
-    image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800',
-  },
-  {
-    id: 'prod_8',
-    sku: 'van-cleef-alhambra-vintage',
-    title: 'Van Cleef & Arpels Vintage Alhambra Pendant',
-    brand: 'Van Cleef & Arpels',
-    priceCents: 325000,
-    originalPriceCents: 420000,
-    condition: 'EXCELLENT',
-    image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800',
-  },
-];
-
-const categories = [
-  {
-    name: 'Handbags',
-    href: '/shop?category=HANDBAGS',
-    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600',
-    description: 'Iconic designs from Hermès, Chanel & more',
-  },
-  {
-    name: 'Watches',
-    href: '/shop?category=WATCHES',
-    image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600',
-    description: 'Rolex, Patek Philippe, Omega & more',
-  },
-  {
-    name: 'Jewelry',
-    href: '/shop?category=JEWELRY',
-    image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600',
-    description: 'Cartier, Van Cleef & Arpels & more',
-  },
-];
-
-const trustFeatures = [
-  {
-    icon: Shield,
-    title: 'Covet Certified',
-    description: 'Every item authenticated by our expert team',
-  },
-  {
-    icon: Award,
-    title: '100% Authentic',
-    description: 'Guaranteed authenticity or your money back',
-  },
-  {
-    icon: Truck,
-    title: 'Free Shipping',
-    description: 'Complimentary shipping on all orders',
-  },
+// Completely static product data
+const products = [
+  { id: '1', sku: 'hermes-birkin-25-noir', title: 'Hermès Birkin 25', brand: 'Hermès', price: '$18,950', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&h=400&fit=crop' },
+  { id: '2', sku: 'chanel-classic-flap', title: 'Chanel Classic Flap', brand: 'Chanel', price: '$7,850', image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop' },
+  { id: '3', sku: 'rolex-datejust-36', title: 'Rolex Datejust 36', brand: 'Rolex', price: '$8,950', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&h=400&fit=crop' },
+  { id: '4', sku: 'cartier-love-bracelet', title: 'Cartier Love Bracelet', brand: 'Cartier', price: '$5,950', image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=400&fit=crop' },
+  { id: '5', sku: 'louis-vuitton-neverfull', title: 'LV Neverfull MM', brand: 'Louis Vuitton', price: '$1,450', image: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=400&h=400&fit=crop' },
+  { id: '6', sku: 'gucci-marmont', title: 'Gucci GG Marmont', brand: 'Gucci', price: '$1,650', image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=400&h=400&fit=crop' },
+  { id: '7', sku: 'omega-speedmaster', title: 'Omega Speedmaster', brand: 'Omega', price: '$4,950', image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop' },
+  { id: '8', sku: 'van-cleef-alhambra', title: 'VCA Alhambra Pendant', brand: 'Van Cleef & Arpels', price: '$3,250', image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop' },
 ];
 
 export default function HomePage() {
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative bg-brand-charcoal text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10" />
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920)',
-          }}
-        />
-        <Container className="relative z-20 py-24 lg:py-40">
-          <div className="max-w-xl">
-            <h1 className="text-4xl lg:text-6xl font-light tracking-tight mb-6">
-              Luxury,
-              <br />
-              <span className="font-semibold">Authenticated.</span>
+      {/* Hero */}
+      <section
+        className="relative min-h-[500px] flex items-center"
+        style={{
+          backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.7), transparent), url(https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="max-w-xl text-white">
+            <h1 className="text-5xl lg:text-6xl font-light tracking-tight mb-6">
+              Luxury,<br /><span className="font-semibold">Authenticated.</span>
             </h1>
-            <p className="text-lg lg:text-xl text-gray-300 mb-8">
+            <p className="text-xl text-gray-300 mb-8">
               Boston&apos;s premier destination for authenticated luxury consignment.
-              Shop with confidence.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/shop">
-                <Button size="lg" variant="secondary">
-                  Shop Now
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
-              <Link href="/consign">
-                <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-brand-charcoal">
-                  Consign With Us
-                </Button>
-              </Link>
+            <Link
+              href="/shop"
+              className="inline-block bg-amber-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-amber-700 transition-colors"
+            >
+              Shop Now →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Bar */}
+      <section className="bg-amber-50 py-6 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-3">
+              <span className="text-2xl">🛡️</span>
+              <div>
+                <p className="font-medium text-gray-900">Covet Certified</p>
+                <p className="text-sm text-gray-600">Expert authentication</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center md:justify-start gap-3">
+              <span className="text-2xl">✓</span>
+              <div>
+                <p className="font-medium text-gray-900">100% Authentic</p>
+                <p className="text-sm text-gray-600">Money-back guarantee</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center md:justify-start gap-3">
+              <span className="text-2xl">📦</span>
+              <div>
+                <p className="font-medium text-gray-900">Free Shipping</p>
+                <p className="text-sm text-gray-600">On all orders</p>
+              </div>
             </div>
           </div>
-        </Container>
-      </section>
-
-      {/* Trust Features */}
-      <section className="bg-brand-cream py-8 border-b border-gray-200">
-        <Container>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {trustFeatures.map((feature) => (
-              <div key={feature.title} className="flex items-center gap-4">
-                <div className="p-3 bg-white rounded-full">
-                  <feature.icon className="w-6 h-6 text-brand-gold" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-gray-900">{feature.title}</h3>
-                  <p className="text-sm text-gray-600">{feature.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Categories */}
-      <section className="py-16 lg:py-24">
-        <Container>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-light text-gray-900 mb-4">
-              Shop by Category
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover authenticated luxury from the world&apos;s most coveted brands
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={category.href}
-                className="group relative aspect-[4/5] overflow-hidden rounded-xl"
-              >
-                <Image
-                  src={category.image}
-                  alt={category.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h3 className="text-2xl font-medium mb-2">{category.name}</h3>
-                  <p className="text-sm text-gray-300">{category.description}</p>
-                  <span className="inline-flex items-center mt-4 text-sm font-medium text-brand-gold group-hover:underline">
-                    Shop Now
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </Container>
+        </div>
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 lg:py-24 bg-gray-50">
-        <Container>
-          <div className="flex items-center justify-between mb-12">
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-10">
             <div>
-              <h2 className="text-3xl lg:text-4xl font-light text-gray-900 mb-2">
-                Featured Pieces
-              </h2>
-              <p className="text-gray-600">
-                Hand-selected by our experts
-              </p>
+              <h2 className="text-3xl font-light text-gray-900">Featured Pieces</h2>
+              <p className="text-gray-600 mt-1">Hand-selected by our experts</p>
             </div>
-            <Link href="/shop" className="hidden sm:block">
-              <Button variant="outline">
-                View All
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+            <Link href="/shop" className="text-gray-900 font-medium hover:underline">
+              View All →
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-            {featuredProducts.map((product) => (
-              <StaticProductCard key={product.id} product={product} />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+            {products.map((product) => (
+              <Link
+                key={product.id}
+                href={`/products/${product.sku}`}
+                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+              >
+                <div className="aspect-square bg-gray-100 relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <span className="absolute top-2 left-2 bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full font-medium">
+                    Certified
+                  </span>
+                </div>
+                <div className="p-4">
+                  <p className="text-xs text-amber-700 font-medium uppercase tracking-wide">{product.brand}</p>
+                  <h3 className="font-medium text-gray-900 mt-1 line-clamp-1">{product.title}</h3>
+                  <p className="text-lg font-semibold text-gray-900 mt-2">{product.price}</p>
+                </div>
+              </Link>
             ))}
           </div>
-
-          <div className="mt-8 text-center sm:hidden">
-            <Link href="/shop">
-              <Button variant="outline">
-                View All Products
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          </div>
-        </Container>
-      </section>
-
-      {/* About / Trust Section */}
-      <section className="py-16 lg:py-24">
-        <Container>
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl lg:text-4xl font-light text-gray-900 mb-6">
-                The Covet Difference
-              </h2>
-              <div className="space-y-6 text-gray-600">
-                <p>
-                  Since 2015, Covet has been Boston&apos;s trusted destination for authenticated
-                  luxury consignment. Every piece in our collection passes through our rigorous
-                  authentication process, ensuring you shop with complete confidence.
-                </p>
-                <p>
-                  Our team of experts has over 50 years of combined experience authenticating
-                  luxury goods from the world&apos;s most coveted brands. When you see the
-                  <span className="text-brand-gold font-medium"> Covet Certified </span>
-                  badge, you know it&apos;s real.
-                </p>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/authentication">
-                  <Button variant="primary">
-                    Our Authentication Process
-                  </Button>
-                </Link>
-                <Link href="/about">
-                  <Button variant="ghost">
-                    Learn More About Us
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="relative aspect-square rounded-xl overflow-hidden">
-              <Image
-                src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800"
-                alt="Covet Store"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-        </Container>
+        </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-brand-charcoal text-white py-16 lg:py-24">
-        <Container>
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl lg:text-4xl font-light mb-6">
-              Ready to Consign?
-            </h2>
-            <p className="text-gray-400 mb-8">
-              Turn your luxury items into cash. We offer competitive commission rates
-              and handle everything from authentication to shipping.
-            </p>
-            <Link href="/consign">
-              <Button size="lg" variant="secondary">
-                Start Consigning
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
-          </div>
-        </Container>
+      <section className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-light mb-4">Ready to Consign?</h2>
+          <p className="text-gray-400 mb-8 max-w-xl mx-auto">
+            Turn your luxury items into cash with competitive commission rates.
+          </p>
+          <Link
+            href="/sell"
+            className="inline-block bg-amber-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-amber-700 transition-colors"
+          >
+            Start Consigning →
+          </Link>
+        </div>
       </section>
     </div>
   );
