@@ -1,12 +1,9 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Shield, Award, Truck } from 'lucide-react';
-import { Container, Button, Skeleton } from '@/components/ui';
-import { ProductGrid } from '@/components/product/ProductGrid';
-import { useFeaturedProducts } from '@/hooks';
-import { ProductCategory } from '@/types';
+import { Container, Button } from '@/components/ui';
+import { ProductCard } from '@/components/product/ProductCard';
+import { productRepository } from '@/lib/repositories';
 
 const categories = [
   {
@@ -47,8 +44,12 @@ const trustFeatures = [
   },
 ];
 
-export default function HomePage() {
-  const { products, loading } = useFeaturedProducts(8);
+// Revalidate every 60 seconds for consistent data
+export const revalidate = 60;
+
+export default async function HomePage() {
+  // Fetch products server-side for consistency
+  const products = await productRepository.getFeatured(8);
 
   return (
     <div>
@@ -169,7 +170,11 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <ProductGrid products={products} loading={loading} columns={4} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
 
           <div className="mt-8 text-center sm:hidden">
             <Link href="/shop">
