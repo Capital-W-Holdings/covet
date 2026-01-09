@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Badge, Card } from '@/components/ui';
 
@@ -47,14 +46,14 @@ export function StaticProductCard({ product }: StaticProductCardProps) {
   return (
     <Card hover className="group">
       <Link href={`/products/${product.sku}`} className="block">
-        {/* Image */}
+        {/* Image - using regular img to avoid hydration issues */}
         <div className="relative aspect-square bg-gray-50 overflow-hidden">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={product.image}
             alt={product.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
           />
 
           {/* Badges */}

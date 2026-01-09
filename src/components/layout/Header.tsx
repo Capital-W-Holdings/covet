@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, X, ShoppingBag, User, Heart } from 'lucide-react';
@@ -37,15 +36,9 @@ export function Header() {
         <nav className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0">
-            <Image
-              src="https://i.ibb.co/99Gyjq1p/Covet-Logotype.webp"
-              alt="Covet"
-              width={140}
-              height={40}
-              className="h-8 lg:h-10 w-auto object-contain"
-              priority
-              unoptimized
-            />
+            <span className="text-2xl lg:text-3xl font-light tracking-tight text-brand-charcoal">
+              <span className="font-semibold">COVET</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
