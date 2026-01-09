@@ -1,10 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import './globals.css';
-import { AuthProvider } from '@/hooks/useAuth';
-import { CartProvider } from '@/hooks/useCart';
-import { WishlistProvider } from '@/hooks/useWishlist';
-import { QuickViewProvider } from '@/components/ui/QuickViewModal';
+import { ClientProviders } from '@/components/providers/ClientProviders';
 
 export const metadata: Metadata = {
   title: {
@@ -64,17 +61,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <QuickViewProvider>
-                <StaticHeader />
-                <main className="flex-1">{children}</main>
-                <StaticFooter />
-              </QuickViewProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
+        <ClientProviders>
+          <StaticHeader />
+          <main className="flex-1">{children}</main>
+          <StaticFooter />
+        </ClientProviders>
       </body>
     </html>
   );
