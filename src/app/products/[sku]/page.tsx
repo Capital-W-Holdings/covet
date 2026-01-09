@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,7 +11,8 @@ import { PriceAlertButton } from '@/components/ui/PriceAlert';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { useProductBySku, useRelatedProducts, useCart, useAuth, WishlistButton } from '@/hooks';
 import { formatPrice, calculateDiscount, cn } from '@/lib/utils';
-import { AuthenticationStatus, ProductCondition, ProductStatus } from '@/types';
+import { AuthenticationStatus, ProductCondition, ProductStatus, ProductCategory } from '@/types';
+import { findProductBySku, type StaticProduct } from '@/lib/staticProducts';
 
 const conditionDescriptions: Record<ProductCondition, string> = {
   [ProductCondition.NEW_WITH_TAGS]: 'Brand new, never used, with original tags attached',
@@ -22,12 +23,45 @@ const conditionDescriptions: Record<ProductCondition, string> = {
   [ProductCondition.FAIR]: 'Visible wear, still functional and presentable',
 };
 
+// Helper to convert static product to display format
+function convertStaticProduct(staticProduct: StaticProduct) {
+  return {
+    id: staticProduct.id,
+    sku: staticProduct.sku,
+    title: staticProduct.title,
+    brand: staticProduct.brand,
+    category: staticProduct.category as ProductCategory,
+    condition: staticProduct.condition as ProductCondition,
+    priceCents: staticProduct.priceCents,
+    originalPriceCents: staticProduct.originalPriceCents,
+    description: staticProduct.description,
+    images: [{ url: staticProduct.image, alt: staticProduct.title, order: 0, isPrimary: true }],
+    authenticationStatus: AuthenticationStatus.COVET_CERTIFIED,
+    status: ProductStatus.ACTIVE,
+    metadata: {},
+    store: staticProduct.store,
+    // Add required fields for Product type compatibility
+    storeId: 'store_covet',
+    viewCount: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
+
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const sku = params.sku as string;
 
-  const { product, loading, error } = useProductBySku(sku);
+  // First check static products (for shop page products)
+  const staticProduct = findProductBySku(sku);
+
+  // Only call API if no static product found
+  const { product: apiProduct, loading, error } = useProductBySku(staticProduct ? '' : sku);
+
+  // Use static product if found, otherwise use API product
+  const product = staticProduct ? convertStaticProduct(staticProduct) : apiProduct;
+
   const { products: relatedProducts, loading: relatedLoading } = useRelatedProducts(product?.id || '', 4);
   const { addToCart, item: cartItem } = useCart();
   const { user } = useAuth();
@@ -35,7 +69,13 @@ export default function ProductDetailPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
-  if (loading) {
+  // Scroll to top on mount - fixes auto-scroll to bottom issue
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [sku]);
+
+  // Show loading only if we don't have a static product and API is loading
+  if (!staticProduct && loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Spinner size="lg" />
@@ -43,7 +83,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  if (error || !product) {
+  if (!product) {
     return (
       <Container className="py-16">
         <EmptyState
@@ -268,55 +308,65 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Details */}
-            {product.metadata && Object.keys(product.metadata).length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-lg font-medium text-gray-900 mb-3">Details</h2>
-                <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
-                  {product.metadata.material && (
-                    <>
-                      <dt className="text-sm text-gray-500">Material</dt>
-                      <dd className="text-sm text-gray-900">{product.metadata.material}</dd>
-                    </>
-                  )}
-                  {product.metadata.color && (
-                    <>
-                      <dt className="text-sm text-gray-500">Color</dt>
-                      <dd className="text-sm text-gray-900">{product.metadata.color}</dd>
-                    </>
-                  )}
-                  {product.metadata.size && (
-                    <>
-                      <dt className="text-sm text-gray-500">Size</dt>
-                      <dd className="text-sm text-gray-900">{product.metadata.size}</dd>
-                    </>
-                  )}
-                  {product.metadata.yearProduced && (
-                    <>
-                      <dt className="text-sm text-gray-500">Year</dt>
-                      <dd className="text-sm text-gray-900">{product.metadata.yearProduced}</dd>
-                    </>
-                  )}
-                  {product.metadata.measurements && (
-                    <>
-                      <dt className="text-sm text-gray-500">Dimensions</dt>
-                      <dd className="text-sm text-gray-900">
-                        {product.metadata.measurements.width} x {product.metadata.measurements.height}
-                        {product.metadata.measurements.depth && ` x ${product.metadata.measurements.depth}`}
-                        {' '}{product.metadata.measurements.unit}
-                      </dd>
-                    </>
-                  )}
-                  {product.metadata.includedAccessories && product.metadata.includedAccessories.length > 0 && (
-                    <>
-                      <dt className="text-sm text-gray-500">Includes</dt>
-                      <dd className="text-sm text-gray-900">
-                        {product.metadata.includedAccessories.join(', ')}
-                      </dd>
-                    </>
-                  )}
-                </dl>
-              </div>
-            )}
+            {product.metadata && Object.keys(product.metadata).length > 0 && (() => {
+              const meta = product.metadata as {
+                material?: string;
+                color?: string;
+                size?: string;
+                yearProduced?: number;
+                measurements?: { width: number; height: number; depth?: number; unit: string };
+                includedAccessories?: string[];
+              };
+              return (
+                <div className="mb-8">
+                  <h2 className="text-lg font-medium text-gray-900 mb-3">Details</h2>
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    {meta.material && (
+                      <>
+                        <dt className="text-sm text-gray-500">Material</dt>
+                        <dd className="text-sm text-gray-900">{meta.material}</dd>
+                      </>
+                    )}
+                    {meta.color && (
+                      <>
+                        <dt className="text-sm text-gray-500">Color</dt>
+                        <dd className="text-sm text-gray-900">{meta.color}</dd>
+                      </>
+                    )}
+                    {meta.size && (
+                      <>
+                        <dt className="text-sm text-gray-500">Size</dt>
+                        <dd className="text-sm text-gray-900">{meta.size}</dd>
+                      </>
+                    )}
+                    {meta.yearProduced && (
+                      <>
+                        <dt className="text-sm text-gray-500">Year</dt>
+                        <dd className="text-sm text-gray-900">{meta.yearProduced}</dd>
+                      </>
+                    )}
+                    {meta.measurements && (
+                      <>
+                        <dt className="text-sm text-gray-500">Dimensions</dt>
+                        <dd className="text-sm text-gray-900">
+                          {meta.measurements.width} x {meta.measurements.height}
+                          {meta.measurements.depth && ` x ${meta.measurements.depth}`}
+                          {' '}{meta.measurements.unit}
+                        </dd>
+                      </>
+                    )}
+                    {meta.includedAccessories && meta.includedAccessories.length > 0 && (
+                      <>
+                        <dt className="text-sm text-gray-500">Includes</dt>
+                        <dd className="text-sm text-gray-900">
+                          {meta.includedAccessories.join(', ')}
+                        </dd>
+                      </>
+                    )}
+                  </dl>
+                </div>
+              );
+            })()}
 
             {/* SKU */}
             <p className="text-xs text-gray-400">SKU: {product.sku}</p>
