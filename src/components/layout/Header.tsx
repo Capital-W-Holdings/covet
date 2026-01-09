@@ -36,14 +36,15 @@ export function Header() {
       <Container>
         <nav className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center shrink-0">
             <Image
               src="https://i.ibb.co/99Gyjq1p/Covet-Logotype.webp"
               alt="Covet"
-              width={120}
-              height={32}
-              className="h-6 lg:h-8 w-auto"
+              width={140}
+              height={40}
+              className="h-8 lg:h-10 w-auto object-contain"
               priority
+              unoptimized
             />
           </Link>
 
