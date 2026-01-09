@@ -107,15 +107,15 @@ export function checkRateLimit(
 
 // Preset configurations for different endpoints
 export const RateLimitPresets = {
-  /** Login attempts: 5 per minute per IP */
+  /** Login attempts: 20 per minute per IP (relaxed for demo) */
   login: {
-    limit: 5,
+    limit: 20,
     windowMs: 60 * 1000, // 1 minute
   },
-  
-  /** Registration: 3 per hour per IP */
+
+  /** Registration: 10 per hour per IP (relaxed for demo) */
   register: {
-    limit: 3,
+    limit: 10,
     windowMs: 60 * 60 * 1000, // 1 hour
   },
   
