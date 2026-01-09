@@ -1,8 +1,10 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { productQuerySchema } from '@/lib/validations';
 import { productRepository } from '@/lib/repositories';
-import { createSuccessResponse, handleApiError } from '@/lib/errors';
 import type { ProductQuery, ProductFilters, ProductSort } from '@/types';
+
+// Cache for 60 seconds to prevent serverless instance inconsistency
+export const revalidate = 60;
 
 export async function GET(request: NextRequest) {
   try {
@@ -52,8 +54,19 @@ export async function GET(request: NextRequest) {
     };
 
     const result = await productRepository.findMany(query);
-    return createSuccessResponse(result);
+
+    return NextResponse.json(
+      { success: true, data: result },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      }
+    );
   } catch (error) {
-    return handleApiError(error);
+    return NextResponse.json(
+      { success: false, error: { message: 'Failed to fetch products' } },
+      { status: 500 }
+    );
   }
 }
