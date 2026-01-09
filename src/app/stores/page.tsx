@@ -135,8 +135,8 @@ export default function StoresPage() {
 
               {/* Store markers overlay */}
               <div className="absolute inset-0 pointer-events-none">
-                {/* Boston stores cluster - upper right on land */}
-                <div className="absolute pointer-events-auto" style={{ top: '18%', left: '72%' }}>
+                {/* Boston stores cluster - positioned over Boston on map */}
+                <div className="absolute pointer-events-auto" style={{ top: '26%', left: '56%' }}>
                   <div className="relative">
                     {/* Back Bay */}
                     <button
@@ -192,11 +192,11 @@ export default function StoresPage() {
                   </div>
                 </div>
 
-                {/* NYC - southwestern position */}
+                {/* NYC - positioned over New York City */}
                 <button
                   onClick={() => setSelectedStore(selectedStore === '4' ? null : '4')}
                   className={`absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 ${selectedStore === '4' ? 'z-20' : 'z-10'}`}
-                  style={{ top: '62%', left: '42%' }}
+                  style={{ top: '68%', left: '35%' }}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '4' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-gray-500'}`}>
                     <MapPin className="w-4 h-4 text-white" />
@@ -210,11 +210,11 @@ export default function StoresPage() {
                   )}
                 </button>
 
-                {/* Hamptons - Long Island, east of NYC */}
+                {/* Hamptons - Long Island east end */}
                 <button
                   onClick={() => setSelectedStore(selectedStore === '5' ? null : '5')}
                   className={`absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 ${selectedStore === '5' ? 'z-20' : 'z-10'}`}
-                  style={{ top: '58%', left: '55%' }}
+                  style={{ top: '64%', left: '48%' }}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '5' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-gray-500'}`}>
                     <MapPin className="w-4 h-4 text-white" />
@@ -232,7 +232,7 @@ export default function StoresPage() {
                 <button
                   onClick={() => setSelectedStore(selectedStore === '6' ? null : '6')}
                   className={`absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-110 ${selectedStore === '6' ? 'z-20' : 'z-10'}`}
-                  style={{ top: '32%', left: '68%' }}
+                  style={{ top: '42%', left: '54%' }}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white ${selectedStore === '6' ? 'bg-green-500 ring-4 ring-green-200' : 'bg-gray-500'}`}>
                     <MapPin className="w-4 h-4 text-white" />

@@ -261,30 +261,7 @@ export default function BecomeSellerPage() {
     );
   }
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Container className="py-16">
-          <div className="max-w-md mx-auto text-center">
-            <div className="w-16 h-16 rounded-full bg-brand-cream flex items-center justify-center mx-auto mb-6">
-              <Store className="w-8 h-8 text-brand-navy" />
-            </div>
-            <h1 className="font-heading text-2xl text-brand-navy mb-4">
-              Become a Covet Seller
-            </h1>
-            <p className="font-mono text-sm text-gray-600 mb-8">
-              Sign in or create an account to apply for a seller account.
-            </p>
-            <Link href="/login?redirect=/sell">
-              <Button size="lg">Sign In to Apply</Button>
-            </Link>
-          </div>
-        </Container>
-      </div>
-    );
-  }
-
-  if (existingApplication) {
+  if (user && existingApplication) {
     return (
       <div className="min-h-screen bg-white">
         <Container className="py-16">
@@ -603,8 +580,30 @@ export default function BecomeSellerPage() {
             </div>
           </div>
 
-          {/* Application Form */}
+          {/* Application Form or Sign In Prompt */}
           <div className="lg:col-span-2">
+            {!user ? (
+              <div className="bg-white border border-gray-200 p-8 lg:p-12 text-center">
+                <div className="w-20 h-20 rounded-full bg-brand-cream flex items-center justify-center mx-auto mb-6">
+                  <Store className="w-10 h-10 text-brand-navy" />
+                </div>
+                <h2 className="font-heading text-2xl text-brand-navy mb-4">
+                  Ready to Get Started?
+                </h2>
+                <p className="font-mono text-sm text-gray-600 mb-8 max-w-md mx-auto">
+                  Sign in or create an account to apply for a seller account. Our team reviews applications within 2-3 business days.
+                </p>
+                <Link href="/login?redirect=/sell">
+                  <Button size="lg">
+                    Sign In to Apply
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+                <p className="font-mono text-xs text-gray-500 mt-6">
+                  Don&apos;t have an account? <Link href="/register?redirect=/sell" className="text-brand-navy underline">Create one here</Link>
+                </p>
+              </div>
+            ) : (
             <div className="bg-white border border-gray-200 p-6 lg:p-8">
               {/* Progress Indicator */}
               <StepIndicator steps={applicationSteps} currentStep={step} />
@@ -880,6 +879,7 @@ export default function BecomeSellerPage() {
                 )}
               </form>
             </div>
+            )}
           </div>
         </div>
         </Container>
