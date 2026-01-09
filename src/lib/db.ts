@@ -123,6 +123,9 @@ class InMemoryDatabase {
   async seed(): Promise<void> {
     if (this.seeded) return;
 
+    // Use fixed base date for consistent seeding across serverless instances
+    const baseDate = new Date('2025-01-01T00:00:00Z');
+
     // Create admin user
     const adminPasswordHash = await bcrypt.hash('Admin123!', 10);
     const adminUser: User = {
@@ -135,8 +138,8 @@ class InMemoryDatabase {
         shippingAddresses: [],
       },
       status: UserStatus.ACTIVE,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: baseDate,
+      updatedAt: baseDate,
     };
     this.users.create(adminUser);
 
@@ -152,8 +155,8 @@ class InMemoryDatabase {
         shippingAddresses: [],
       },
       status: UserStatus.ACTIVE,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: baseDate,
+      updatedAt: baseDate,
     };
     this.users.create(storeUser);
 
@@ -180,8 +183,8 @@ class InMemoryDatabase {
         ],
       },
       status: UserStatus.ACTIVE,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: baseDate,
+      updatedAt: baseDate,
     };
     this.users.create(buyerUser);
 
@@ -215,12 +218,13 @@ class InMemoryDatabase {
       },
       trustScore: 98,
       takeRate: 0.06,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: baseDate,
+      updatedAt: baseDate,
     };
     this.stores.create(covetStore);
 
-    // Create sample products
+    // Create sample products with fixed timestamps for consistency
+    const day = 24 * 60 * 60 * 1000;
     const products: Omit<Product, 'id'>[] = [
       {
         storeId: covetStore.id,
@@ -248,8 +252,8 @@ class InMemoryDatabase {
           includedAccessories: ['Original Box', 'Dustbag', 'Lock', 'Keys', 'Clochette'],
         },
         viewCount: 342,
-        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
+        createdAt: new Date(baseDate.getTime() - 7 * day),
+        updatedAt: baseDate,
       },
       {
         storeId: covetStore.id,
@@ -276,8 +280,8 @@ class InMemoryDatabase {
           includedAccessories: ['Dustbag', 'Authenticity Card'],
         },
         viewCount: 528,
-        createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
+        createdAt: new Date(baseDate.getTime() - 14 * day),
+        updatedAt: baseDate,
       },
       {
         storeId: covetStore.id,
@@ -303,8 +307,8 @@ class InMemoryDatabase {
           includedAccessories: ['Box', 'Papers', 'Service Records'],
         },
         viewCount: 892,
-        createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
+        createdAt: new Date(baseDate.getTime() - 21 * day),
+        updatedAt: baseDate,
       },
       {
         storeId: covetStore.id,
@@ -329,8 +333,8 @@ class InMemoryDatabase {
           includedAccessories: ['Screwdriver', 'Box', 'Certificate'],
         },
         viewCount: 456,
-        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
+        createdAt: new Date(baseDate.getTime() - 5 * day),
+        updatedAt: baseDate,
       },
       {
         storeId: covetStore.id,
@@ -355,8 +359,8 @@ class InMemoryDatabase {
           includedAccessories: ['Pochette'],
         },
         viewCount: 723,
-        createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
+        createdAt: new Date(baseDate.getTime() - 10 * day),
+        updatedAt: baseDate,
       },
       {
         storeId: covetStore.id,
@@ -381,8 +385,8 @@ class InMemoryDatabase {
           includedAccessories: ['Dustbag'],
         },
         viewCount: 234,
-        createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
+        createdAt: new Date(baseDate.getTime() - 3 * day),
+        updatedAt: baseDate,
       },
       {
         storeId: covetStore.id,
@@ -407,8 +411,8 @@ class InMemoryDatabase {
           includedAccessories: ['Box', 'Papers', 'NATO Strap'],
         },
         viewCount: 567,
-        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
+        createdAt: new Date(baseDate.getTime() - 8 * day),
+        updatedAt: baseDate,
       },
       {
         storeId: covetStore.id,
@@ -432,8 +436,8 @@ class InMemoryDatabase {
           includedAccessories: ['Box', 'Certificate'],
         },
         viewCount: 312,
-        createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date(),
+        createdAt: new Date(baseDate.getTime() - 12 * day),
+        updatedAt: baseDate,
       },
     ];
 
