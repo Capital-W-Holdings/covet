@@ -1,53 +1,56 @@
 import type { Metadata, Viewport } from 'next';
+import Link from 'next/link';
 import './globals.css';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { AuthProvider } from '@/hooks/useAuth';
-import { CartProvider } from '@/hooks/useCart';
-import { WishlistProvider } from '@/hooks/useWishlist';
-import { QuickViewProvider } from '@/components/ui/QuickViewModal';
 
 export const metadata: Metadata = {
   title: {
     default: 'Covet | Luxury Authenticated Consignment',
     template: '%s | Covet',
   },
-  description: "Boston's premier destination for authenticated luxury consignment. Shop pre-owned designer handbags, watches, and jewelry with confidence.",
-  keywords: ['luxury consignment', 'designer bags', 'authenticated luxury', 'pre-owned watches', 'consignment boston'],
-  authors: [{ name: 'Covet' }],
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://covet.com',
-    siteName: 'Covet',
-    title: 'Covet | Luxury Authenticated Consignment',
-    description: "Boston's premier destination for authenticated luxury consignment.",
-    images: [
-      {
-        url: 'https://i.ibb.co/99Gyjq1p/Covet-Logotype.webp',
-        width: 1200,
-        height: 630,
-        alt: 'Covet',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Covet | Luxury Authenticated Consignment',
-    description: "Boston's premier destination for authenticated luxury consignment.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  description: "Boston's premier destination for authenticated luxury consignment.",
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
   themeColor: '#1a1a1a',
 };
+
+// Completely static header - no hooks, no client components
+function StaticHeader() {
+  return (
+    <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="flex items-center justify-between h-16">
+          <Link href="/" className="text-2xl font-semibold text-gray-900">
+            COVET
+          </Link>
+          <div className="hidden md:flex items-center gap-8">
+            <Link href="/shop" className="text-sm font-medium text-gray-600 hover:text-gray-900">Shop</Link>
+            <Link href="/stores" className="text-sm font-medium text-gray-600 hover:text-gray-900">Stores</Link>
+            <Link href="/sell" className="text-sm font-medium text-gray-600 hover:text-gray-900">Sell</Link>
+            <Link href="/login" className="text-sm font-medium text-gray-900 border border-gray-900 px-4 py-2 rounded-lg hover:bg-gray-900 hover:text-white transition-colors">Sign In</Link>
+          </div>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+// Completely static footer
+function StaticFooter() {
+  return (
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <p className="text-2xl font-semibold mb-2">COVET</p>
+          <p className="text-gray-400">Luxury, Authenticated.</p>
+          <p className="text-gray-500 text-sm mt-4">© 2025 Covet. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -57,17 +60,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <QuickViewProvider>
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </QuickViewProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
+        <StaticHeader />
+        <main className="flex-1">{children}</main>
+        <StaticFooter />
       </body>
     </html>
   );
