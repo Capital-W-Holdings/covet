@@ -2,8 +2,91 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Shield, Award, Truck } from 'lucide-react';
 import { Container, Button } from '@/components/ui';
-import { ProductCard } from '@/components/product/ProductCard';
-import { productRepository } from '@/lib/repositories';
+import { StaticProductCard } from '@/components/product/StaticProductCard';
+
+// Static product data - no database needed
+const featuredProducts = [
+  {
+    id: 'prod_1',
+    sku: 'hermes-birkin-25-noir',
+    title: 'Hermès Birkin 25 Togo Noir',
+    brand: 'Hermès',
+    priceCents: 1895000,
+    originalPriceCents: 2200000,
+    condition: 'EXCELLENT',
+    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800',
+  },
+  {
+    id: 'prod_2',
+    sku: 'chanel-classic-flap-medium',
+    title: 'Chanel Classic Flap Medium Caviar',
+    brand: 'Chanel',
+    priceCents: 785000,
+    originalPriceCents: 1050000,
+    condition: 'VERY_GOOD',
+    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800',
+  },
+  {
+    id: 'prod_3',
+    sku: 'rolex-datejust-36',
+    title: 'Rolex Datejust 36 Two-Tone',
+    brand: 'Rolex',
+    priceCents: 895000,
+    originalPriceCents: 1200000,
+    condition: 'EXCELLENT',
+    image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800',
+  },
+  {
+    id: 'prod_4',
+    sku: 'cartier-love-bracelet',
+    title: 'Cartier Love Bracelet Yellow Gold',
+    brand: 'Cartier',
+    priceCents: 595000,
+    originalPriceCents: 750000,
+    condition: 'EXCELLENT',
+    image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800',
+  },
+  {
+    id: 'prod_5',
+    sku: 'louis-vuitton-neverfull-mm',
+    title: 'Louis Vuitton Neverfull MM Damier Ebene',
+    brand: 'Louis Vuitton',
+    priceCents: 145000,
+    originalPriceCents: 200000,
+    condition: 'VERY_GOOD',
+    image: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800',
+  },
+  {
+    id: 'prod_6',
+    sku: 'gucci-marmont-small',
+    title: 'Gucci GG Marmont Small Matelassé',
+    brand: 'Gucci',
+    priceCents: 165000,
+    originalPriceCents: 250000,
+    condition: 'EXCELLENT',
+    image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800',
+  },
+  {
+    id: 'prod_7',
+    sku: 'omega-speedmaster-moonwatch',
+    title: 'Omega Speedmaster Professional Moonwatch',
+    brand: 'Omega',
+    priceCents: 495000,
+    originalPriceCents: 650000,
+    condition: 'EXCELLENT',
+    image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800',
+  },
+  {
+    id: 'prod_8',
+    sku: 'van-cleef-alhambra-vintage',
+    title: 'Van Cleef & Arpels Vintage Alhambra Pendant',
+    brand: 'Van Cleef & Arpels',
+    priceCents: 325000,
+    originalPriceCents: 420000,
+    condition: 'EXCELLENT',
+    image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800',
+  },
+];
 
 const categories = [
   {
@@ -44,22 +127,16 @@ const trustFeatures = [
   },
 ];
 
-// Revalidate every 60 seconds for consistent data
-export const revalidate = 60;
-
-export default async function HomePage() {
-  // Fetch products server-side for consistency
-  const products = await productRepository.getFeatured(8);
-
+export default function HomePage() {
   return (
     <div>
       {/* Hero Section */}
       <section className="relative bg-brand-charcoal text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10" />
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920)',
+            backgroundImage: 'url(https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920)',
           }}
         />
         <Container className="relative z-20 py-24 lg:py-40">
@@ -171,8 +248,8 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {featuredProducts.map((product) => (
+              <StaticProductCard key={product.id} product={product} />
             ))}
           </div>
 
