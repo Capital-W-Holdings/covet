@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import './globals.css';
+import { AuthProvider } from '@/hooks/useAuth';
+import { CartProvider } from '@/hooks/useCart';
+import { WishlistProvider } from '@/hooks/useWishlist';
+import { QuickViewProvider } from '@/components/ui/QuickViewModal';
 
 export const metadata: Metadata = {
   title: {
@@ -16,7 +20,7 @@ export const viewport: Viewport = {
   themeColor: '#1a1a1a',
 };
 
-// Completely static header - no hooks, no client components
+// Static header - no hooks
 function StaticHeader() {
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -37,7 +41,7 @@ function StaticHeader() {
   );
 }
 
-// Completely static footer
+// Static footer
 function StaticFooter() {
   return (
     <footer className="bg-gray-900 text-white py-12">
@@ -60,9 +64,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
-        <StaticHeader />
-        <main className="flex-1">{children}</main>
-        <StaticFooter />
+        <AuthProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <QuickViewProvider>
+                <StaticHeader />
+                <main className="flex-1">{children}</main>
+                <StaticFooter />
+              </QuickViewProvider>
+            </WishlistProvider>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
