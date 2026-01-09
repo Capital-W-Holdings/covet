@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     // Rate limit check
     const clientIp = getClientIp(request);
     const rateLimitResult = checkRateLimit(`login:${clientIp}`, RateLimitPresets.login);
-    
+
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
         {
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
             },
           },
         },
-        { 
+        {
           status: 429,
           headers: createRateLimitHeaders(rateLimitResult),
         }
@@ -56,21 +56,41 @@ export async function POST(request: NextRequest) {
     // Update last login
     await userRepository.updateLastLogin(user.id);
 
-    // Create session
-    const token = await createToken(user);
-    await setSessionCookie(token);
+    // Create session token
+    let token: string;
+    try {
+      token = await createToken(user);
+    } catch (tokenError) {
+      console.error('Token creation failed:', tokenError);
+      return NextResponse.json({
+        success: false,
+        error: { type: 'InternalError', message: 'Token creation failed', details: String(tokenError) }
+      }, { status: 500 });
+    }
+
+    // Set cookie
+    try {
+      await setSessionCookie(token);
+    } catch (cookieError) {
+      console.error('Cookie setting failed:', cookieError);
+      return NextResponse.json({
+        success: false,
+        error: { type: 'InternalError', message: 'Cookie setting failed', details: String(cookieError) }
+      }, { status: 500 });
+    }
 
     // Return user (without password hash)
     const { passwordHash: _, ...userData } = user;
-    
+
     const response = createSuccessResponse(userData);
     // Add rate limit headers to successful response too
     Object.entries(createRateLimitHeaders(rateLimitResult)).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
-    
+
     return response;
   } catch (error) {
+    console.error('Login error:', error);
     return handleApiError(error);
   }
 }
