@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ShoppingCart, Clock, CheckCircle, Truck, Package, XCircle } from 'lucide-react';
@@ -206,7 +206,7 @@ const statusColors = {
   cancelled: 'danger',
 } as const;
 
-export default function OrdersAnalyticsPage() {
+function OrdersAnalyticsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, loading: authLoading } = useAuth();
@@ -469,5 +469,17 @@ export default function OrdersAnalyticsPage() {
         ) : null}
       </Container>
     </div>
+  );
+}
+
+export default function OrdersAnalyticsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    }>
+      <OrdersAnalyticsContent />
+    </Suspense>
   );
 }
